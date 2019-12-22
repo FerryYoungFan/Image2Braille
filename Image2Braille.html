@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<!--Image to Braille by FanKetchup-->
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=0.5, maximum-scale=2.0, user-scalable=yes" /> 
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Image to Braille</title>
+    <style>
+        *{
+            margin:0;
+            border:0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+        }
+        body{
+            background-color: rgb(83, 160, 248);
+        }
+        body>div{
+            margin-bottom: 5px;
+            margin-left:auto;
+            margin-right:auto;
+        }
+        .hidden{
+            display: none;
+        }
+        #appTitle{
+            color: white;
+            width:500px;
+            margin-top:20px;
+            margin-bottom:20px;
+        }
+        #appTitle>h1{
+            text-align: center;
+        }
+        #appTitle>p{
+            text-align: right;
+            margin-top:0px;
+            margin-right:90px;
+        }
+        #uploadDiv{
+            width:500px;
+            height:80px;
+            text-align: center;
+            border:2px solid rgb(24, 90, 167);
+            background-color: white;
+        }
+        #uploadDiv>input{
+            width:400px;
+            outline: 2px dashed rgba(24, 90, 167, 0.5);
+            padding:10px;
+            cursor: pointer;
+            transition: 0.3s;
+            background: rgb(191, 213, 243);
+        }
+        #uploadDiv>input:hover{
+            outline: 2px dashed rgb(24, 90, 167,1);
+        }
+        #inputDiv{
+            width:500px;
+            text-align: center;
+            border:2px solid rgb(24, 90, 167);
+            background-color: white;
+        }
+        #button_set>button{
+            margin:5px 50px;
+            width:100px;
+            height:40px;
+            background: rgb(83, 160, 248);
+            color:white;
+            border:2px solid rgb(24, 90, 167);
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            font-size: 15px;
+            border-radius:5px;
+            outline: none;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        #button_set>button:hover{
+            border:2px solid rgb(83, 160, 248);
+            outline: none;
+        }
+        #button_set>button:active{
+            background-color: rgb(24, 90, 167);
+            outline: none;
+        }
+        #input_left{
+            line-height: 50px;
+            display: inline-block;
+            width:100px;
+            text-align:right;
+            color:rgb(24, 90, 167);
+        }
+        #input_middle{
+            line-height: 50px;
+            display: inline-block;
+            width:250px;
+            margin-left:5px;
+            margin-right:5px;
+            margin-top:5px;
+            text-align:center;
+        }
+        #input_middle>input{
+            width:100%;
+            cursor: pointer;
+        }
+        #input_right{
+            line-height: 50px;
+            display: inline-block;
+            width:70px;
+            text-align:left;  
+            color:rgb(24, 90, 167);
+        }
+        #previewDiv{
+            text-align:center;
+            margin-bottom: 5px;
+        }
+        .info{
+            display:block;
+            font-size: 14px;
+            color:rgb(24, 90, 167);
+            text-align: left;
+            margin-left: 5px;
+            margin-bottom: 5px;;
+        }
+        textarea{
+            width:480px;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+            font-size:18px; 
+            text-align: justify;
+            padding:10px;
+            overflow:scroll;
+            border:none;
+            border-bottom: 2px solid rgb(24, 90, 167);
+        }
+        #outputDiv{
+            text-align: center;
+            width:500px;
+            border:2px solid rgb(24, 90, 167);
+            background: white;
+        }
+        #introduction{
+            width:500px;
+            border:2px solid rgb(24, 90, 167);
+            background:white;
+        }
+        #introduction>h1,h2,h3,h4,h5,h6{
+            color:rgb(24, 90, 167);
+            text-align: center;
+            font-weight: 400;
+            margin-top:5px;
+            margin-bottom:5px;
+        }
+        #demo{
+            width:180px;
+            margin:0px auto;
+            display: block;
+            padding-bottom: 10px;
+        }
+        #state>p{
+            margin:10px 20px;
+            text-align:left;
+            line-height: 30px;
+        }
+        #state>p::before{
+            content:"⠀⠀";
+        }
+        #state>p>span{
+            color:rgb(24, 90, 167);
+            margin-left: 5px;
+            margin-right: 5px;
+            font-weight: 600;
+        }
+        #statePic{
+            width:200px;
+            border:2px dashed rgb(24, 90, 167);
+            margin:0 auto;
+            text-align: center;
+        }
+        #statePic>div{
+            display: inline-block;
+            border:2px solid rgb(24, 90, 167);
+            margin:20px;
+            width:40px;
+            height:40px;
+            border-radius: 50%;
+            line-height: 40px;
+            font-size: 16px;
+            font-weight: 600;
+            color:rgb(24, 90, 167);
+        }
+        .equation{
+            display: block;
+            text-align: center;
+            font-size: 20px;
+            font-weight: 500;
+            color:rgb(24, 90, 167);
+        }
+        .newHr{
+            display: block;
+            border-top:2px dotted rgb(83, 160, 248);
+            width:90%;
+            margin-left: auto;
+            margin-right: auto;
+            margin-bottom: 10px;
+        }
+        .main_a{
+            color:rgb(24, 90, 167);
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .main_a:hover{
+            color:rgb(83, 160, 248);
+        }
+        .main_a:active{
+            color:rgb(24, 90, 167);
+        }
+        .header_a{
+            color:white;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+        .header_a:hover{
+            color:yellow;
+        }
+        .header_a:active{
+            color:white;
+        }
+    </style>
+    <script>
+        "use strict";
+        function elem(id){
+            return document.getElementById(id);
+        }
+        var canvas = document.createElement("canvas");
+        var preview = document.createElement("canvas");
+        var image, totalCounter = 0, havPic = false;
+        function getPixelAt(x,y){
+            var pixelData = canvas.getContext('2d').getImageData(x, y, 1, 1).data;
+            return pixelData;
+        }
+        function img2br(){
+            var cols = parseInt(elem("slider_col").value);
+            var rows = parseInt(elem("slider_row").value);
+            var thr = parseInt(elem("slider_thres").value)/100;
+            var c_max = parseInt(elem("slider_total").value);
+            var thresv = Math.round(255*3*thr);
+            function int2br(arr){
+                var sumup = 0;
+                var dmat = [1,8,2,16,4,32,64,128]; //Braille Patterns
+                for(var pix=0; pix<8; pix++){
+                    sumup = sumup + dmat[pix] * arr[pix]; 
+                }
+                return String.fromCharCode(sumup + 10240);
+            }
+            function resizeImg(width,height){
+                canvas.width = width;
+                canvas.height = height;
+                canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);
+            }
+            function checkPixel(x,y){
+                var pv = getPixelAt(x,y);
+                var a = pv[3]/255;
+                if(thresv >= 0){
+                    var r = pv[0]*a + 255*(1-a);
+                    var g = pv[1]*a + 255*(1-a);
+                    var b = pv[2]*a + 255*(1-a);
+                    preview.style.backgroundColor = "#ffffff";
+                    if(r+g+b < thresv){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                }else{
+                    var r = pv[0]*a;
+                    var g = pv[1]*a;
+                    var b = pv[2]*a;
+                    preview.style.backgroundColor = "#000000";
+                    if(r+g+b > Math.abs(thresv)){
+                        return 1;
+                    }else{
+                        return 0;
+                    }
+                }
+            }
+            function checkSec(i,j){
+                var res = [0,0,0,0,0,0,0,0];
+                res[0] = checkPixel(3*i+1,  5*j+1);
+                res[1] = checkPixel(3*i+2,  5*j+1);
+                res[2] = checkPixel(3*i+1,  5*j+2);
+                res[3] = checkPixel(3*i+2,  5*j+2);
+                res[4] = checkPixel(3*i+1,  5*j+3);
+                res[5] = checkPixel(3*i+2,  5*j+3);
+                res[6] = checkPixel(3*i+1,  5*j+4);
+                res[7] = checkPixel(3*i+2,  5*j+4);
+                return res;
+            }
+            function pic2brs(){
+                while(cols*rows*0.7 > c_max){
+                    cols -= 3;
+                    rows -= 1;
+                }
+                while(true){
+                    var headFlag = false;
+                    var strout = "";
+                    var space_holder = "";
+                    var new_width = cols*3+1;
+                    var new_height = rows*5+1;
+                    resizeImg(new_width, new_height);
+                    var counter = 0;
+                    var minLeftSpace = cols;
+                    var newlineFlag = true;
+                    for(var j = 0; j<rows; j++){
+                        for(var i = 0; i<cols; i++){
+                            var tempc = int2br(checkSec(i,j));
+                            if(tempc == String.fromCharCode(10240)){
+                                space_holder += tempc;
+                            }else{
+                                headFlag = true;
+                                strout += space_holder;
+                                counter += space_holder.length;
+                                if(minLeftSpace > space_holder.length && newlineFlag){
+                                    minLeftSpace = space_holder.length;
+                                }
+                                newlineFlag = false;
+                                space_holder = "";
+                                strout += tempc;
+                                counter += 1;
+                            }
+                        }
+                        if(headFlag){
+                            strout += "\n";
+                        }
+                        space_holder = "";
+                        newlineFlag = true;
+                    }
+                    if(minLeftSpace > 0){
+                        var regh = new RegExp(`^[\\u2800‬]{${minLeftSpace}}`,"ig");
+                        var reg = new RegExp(`\\n[\\u2800‬]{${minLeftSpace}}`,"ig");  
+                        strout = strout.replace(regh,(kw)=>{
+                            counter -= minLeftSpace;
+                            return "";
+                        });
+                        strout = strout.replace(reg,(kw)=>{
+                            counter -= minLeftSpace;
+                            return "\n";
+                        });
+                        strout = strout.replace(/\n*$/,"");
+                    }
+                    if(counter < c_max){
+                        totalCounter = counter;
+                        break;
+                    }else{
+                        cols -= 3;
+                        rows -= 1;
+                    }
+                }
+                elem("outputText").innerHTML = strout;
+                if(strout == ""){
+                    elem("outputInfo").innerHTML = "输出为空，请调整二值化阈值或上传高对比度图片！";
+                    elem("outputInfo").style = "color:red;"
+                }else{
+                    for(var index=0, ocols = 0, orows = 1, tempcols = 0; index<strout.length; index++){
+                        if(strout[index] == "\n"){
+                            orows ++;
+                            tempcols = 0;
+                        }else{
+                            tempcols ++;
+                        }
+                        if(tempcols > ocols) ocols = tempcols;
+                    }
+                    elem("outputInfo").innerHTML = `行数：${ocols}，列数：${orows}，字符数：${counter}`
+                    if(counter >= 140){
+                        elem("outputInfo").innerHTML += " 【注意，字数可能超过推特限制】"
+                        elem("outputInfo").style = "color:red;"
+                    }else{
+                        elem("outputInfo").style = "rgb(24, 90, 167);"
+                    }
+                }
+            }
+            pic2brs();
+        }
+
+        function uploadPhotos(imgfile){
+            var imgfile = imgfile.files[0];
+            var imageRegExp = /image.*/;
+            var reader = '';
+            if (!imageRegExp.test(imgfile.type)) {
+                alert("别放进来奇怪的东西！");
+                return;
+            }  
+            if (window.FileReader) {
+                reader = new FileReader();
+            } else {
+                alert("抱歉，您的浏览器不支持图片预览功能");
+                return;
+            }
+            reader.onload = function (readerEvent) {
+                havPic = true;
+                elem("outputDiv").className = "";
+                elem("inputDiv").className = "";
+                elem("inputDiv").className = "";
+                elem("introduction").className = "hidden";
+                elem("uploadDiv").style.height = "280px";
+                preview.style.marginTop = "7px";
+                preview.style.borderWidth = "2px";
+                preview.style.borderStyle = "solid";
+                preview.style.borderColor = "rgb(24, 90, 167)";
+                image = new Image();
+                image.onload = function(imageEvent){
+                   preview.width = 200;
+                   preview.height = 200;
+                   preview.getContext('2d').drawImage(image,0,0,preview.width,preview.height);
+                   img2br();
+                }
+                image.src = readerEvent.target.result;
+            };
+            reader.readAsDataURL(imgfile);
+            elem("tempCanvas").appendChild(preview);
+        }
+        function showValue(objName, value, maxValue){
+            var obj = elem(objName);
+            obj.innerHTML = value + "/" + maxValue;
+        }
+
+        window.onload = function(){
+            var slider_row = elem("slider_row");
+            var slider_col = elem("slider_col");
+            var slider_total = elem("slider_total");
+            var slider_thres = elem("slider_thres");
+            function showAllValues(){
+                showValue("value_row",slider_row.value, slider_row.max);
+                showValue("value_col",slider_col.value, slider_col.max);
+                showValue("value_total",slider_total.value, slider_total.max);
+                showValue("value_thres",slider_thres.value, slider_thres.max);
+            }
+            showAllValues();
+            function autoSetTotal(){
+                slider_total.value = slider_row.value * slider_col.value;
+            }
+            slider_row.oninput = function(){
+                autoSetTotal();
+                showAllValues();
+                if(havPic)img2br();
+            }
+            slider_col.oninput = function(){
+                autoSetTotal();
+                showAllValues();
+                if(havPic)img2br();
+            }
+            slider_total.oninput = function(){
+                showAllValues();
+            }
+            slider_total.onchange = function(){
+                showAllValues();
+                if(havPic)img2br();
+            }
+            slider_thres.oninput = function(){
+                showAllValues();
+                if(havPic)img2br();
+            }
+            
+            var copy_btn = elem("copy_btn");
+            copy_btn.onclick = function(){
+                if(elem("outputText").innerHTML != ""){
+                    elem("outputText").select();
+                    document.execCommand("copy");
+                    elem("outputInfo").innerHTML = "复制成功！";
+                    elem("outputInfo").style = "color:green;";
+                }else{
+                    elem("outputInfo").innerHTML = "没有内容可以复制！";
+                    elem("outputInfo").style = "color:red;";
+                }
+            }
+            var reset_btn = elem("reset_btn");
+            reset_btn.onclick = function(){
+                slider_row.value = 9;
+                slider_col.value = 17;
+                slider_total.value = 140;
+                showAllValues();
+                if(havPic)img2br();
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="appTitle">
+    <h1>图片转点阵文本生成器</h1>
+    <p>V1.1 By <a href="https://twitter.com/FanKetchup" title="FanKetchup" target="_blank" class="header_a">@FanKetchup</a></p>
+    </div>
+    <div id="uploadDiv">
+        <span class="info">请在此处选择图片。图片仅本地处理，不会上传。</span>
+        <input name="imagefile[]" type="file" id="takePictureField" accept="image/*" onchange="uploadPhotos(this)"/><br/>
+        <div id="previewDiv">
+                <div id="tempCanvas"></div>
+        </div>
+    </div>
+    <div id="outputDiv" class="hidden">
+        <textarea id="outputText" cols="40" rows="15" readonly wrap="off">
+            欢迎使用图片转点阵文本生成器！
+        </textarea>
+        <span class="info" id="outputInfo">生成内容信息</span>
+    </div>
+
+    <div id="inputDiv" class="hidden">
+        <span class="info">请在此处调整字符数和二值计算阈值。注意：推文最长为140字。</span>
+        <div id="button_set">
+            <button id="copy_btn">复制结果</button>
+            <button id="reset_btn">重置参数</button>
+        </div>
+        <div id="input_left">生成列数：<br/>生成行数：<br/>总字符数：<br/>二值化阈值：<br/></div>
+        <div id="input_middle">
+        <input type="range" id="slider_col" min="7" max="50" step="1" value="17"/><br/>
+        <input type="range" id="slider_row" min="5" max="30" step="1" value="9"/><br/>
+        <input type="range" id="slider_total" min="40" max="1500" step="1" value="140"/><br/>
+        <input type="range" id="slider_thres" min="-100" max="100" step="1" value="50"/><br/>
+        </div>
+        <div id="input_right">
+            <span id="value_col"></span><br/>
+            <span id="value_row"></span><br/>
+            <span id="value_total"></span><br/>
+            <span id="value_thres"></span><br/>
+        </div>
+    </div>
+    <div id="introduction">
+        <br/>
+        <h2>欢迎使用帆帆的练手作品</h2>
+        <h4>【请先从本地选取一张图片以生成点阵文本】</h4>
+        <br/>
+        <div class="newHr"></div>
+        <h3>生成效果示例</h3>
+        <br/>
+   <p id="demo">⠀⠀⠀⣀⣴⣦<br/>
+                ⠀⠀⣰⣿⣁⣀⣀⣀⠀⠀⠀⠀⣀<br/>
+                ⣰⣿⣿⡟⠛⠛⠛⠛⠻⣷⠀⠀⠛⢿⣦<br/>
+                ⣿⠀⣿⡇⠀⢀⣶⣿⠀⣿⣷⣦⠀⠀⣿<br/>
+                ⣿⠀⣿⡇⢀⣿⠁⠀⠀⣿⡇⢹⣷⠀⣿<br/>
+                ⠉⠀⣿⡇⢸⣿⠀⠀⠀⣿⡇⠀⣿⡀⣿<br/>
+                ⠀⠀⣿⡇⠘⣿⠀⠀⠀⣿⡇⠀⠈⠻⣿<br/>
+                ⠀⠀⣿⡇⠀⠻⣷⣤⣾⠿⠀⠀⠀⠀⠙⣿⣦⡄</p>
+        <br/>
+        <div class="newHr"></div>
+        <h3>原理说明</h3>
+        <div id="state">
+            <p>此生成器会将输入的图像先压缩尺寸，然后根据阈值转换成二值图像。完成以上步骤后，程序会将二值图像映射成点阵文本。这里点阵文本使用了<a href="https://en.wikipedia.org/wiki/Braille_Patterns" title="转到维基百科" target="_blank" class="main_a">盲文图案</a>，Unicode码范围为10240~10495（十进制），跨度为256个字符。</p>
+            <p>选择对应盲文字符的算法很简单，10240为空，10495为八个点全“点亮”（字符显示为“⣿”）。</p>
+            <br/>
+            <div id="statePic">
+                <div>1</div><div>8</div>
+                <div>2</div><div>16</div>
+                <div>4</div><div>32</div>
+                <div>64</div><div>128</div>
+            </div>
+            <br/>
+            <p>上图展示了8点盲文的计算方法（注意：图中给出的值都为十进制）。举个例子，如果你想输出“⢕”，那么只需要计算：</p>
+            <span class="equation">10240 + 1 + 16 + 4 + 128 = 10389</span>
+            <p>在 Javascript 中，用 <span>String.fromCharCode(10389)</span><br/>或者在 Python3 中， 用 <span>chr(10389)</span> 即可输出“⢕”。</p>
+            <p>你可以<a href="https://github.com/FerryYoungFan/FerryYoungFan.github.io/tree/master/projects/HelloWorld_Image2Braille" target="_blank" class="main_a">点击此处</a>转到帆帆的Repository查看JS和Python的源码。</p>
+            <br/>
+        </div> 
+    </div>
+</body>
+</html>
