@@ -4,7 +4,7 @@
 
  一个能将图片转换成盲文图案的生成器。（无需上传图片就可在本地处理）<br/>
  目前主要为 Twitter 140 字适配<br/>
- This converter can convert a image into braille patterns.<br/><br/><br/>
+ This converter can convert an image into braille patterns.<br/><br/><br/>
 
 
 
